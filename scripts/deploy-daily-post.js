@@ -189,7 +189,7 @@ function generateLexicalContent(records, targetDate) {
 
   // Add simple Dropbox-hosted advertisement
   // Uses a fixed Dropbox shared folder URL - just upload/replace 'current-ad.jpg' in the folder
-  const adImageUrl = 'https://www.dropbox.com/scl/fi/YOUR_FOLDER_ID/current-ad.jpg?rlkey=YOUR_SHARED_KEY&dl=1';
+  const adImageUrl = 'https://www.dropbox.com/scl/fi/0vpf5xq5d194tbx0kvoca/current-ad.jpg?rlkey=uunyix4qp4adsafxa0acybe0i&dl=1';
   const adLinkUrl = process.env.AD_LINK_URL || 'https://angelina411.com';
   
   children.push({
