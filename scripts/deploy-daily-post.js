@@ -186,6 +186,21 @@ function generateLexicalContent(records, targetDate) {
     type: "paragraph",
     version: 1
   });
+
+  // Add simple Dropbox-hosted advertisement
+  const adImageUrl = process.env.AD_IMAGE_URL || 'https://www.dropbox.com/scl/fi/YOUR_FILE_ID/ad-image.jpg?rlkey=YOUR_KEY&dl=1';
+  const adLinkUrl = process.env.AD_LINK_URL || 'https://angelina411.com';
+  
+  children.push({
+    type: "html",
+    version: 1,
+    html: `<div style="text-align: center; margin: 2rem auto; padding: 1rem; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; max-width: 600px;">
+      <p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: #666; text-transform: uppercase; letter-spacing: 1px;">Advertisement</p>
+      <a href="${adLinkUrl}" target="_blank" style="display: block; text-decoration: none;">
+        <img src="${adImageUrl}" alt="Advertisement" style="max-width: 100%; height: auto; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      </a>
+    </div>`
+  });
   
   if (records.length === 0) {
     children.push({
