@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advertisement Management Dashboard - Angelina411</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #007acc 0%, #0056b3 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #007acc;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .pending-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .section-header h2 {
+            font-size: 1.5rem;
+            color: #495057;
+        }
+        
+        .ad-list {
+            padding: 20px;
+        }
+        
+        .ad-item {
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .ad-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+        
+        .ad-title {
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .ad-date {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .ad-content {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 150px 1fr auto;
+            gap: 20px;
+            align-items: start;
+        }
+        
+        .ad-image {
+            width: 150px;
+            height: 150px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .ad-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .ad-details {
+            flex: 1;
+        }
+        
+        .ad-field {
+            margin-bottom: 10px;
+        }
+        
+        .ad-field label {
+            font-weight: 600;
+            color: #495057;
+            margin-right: 8px;
+        }
+        
+        .ad-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .btn-approve {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-approve:hover {
+            background: #218838;
+        }
+        
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-reject:hover {
+            background: #c82333;
+        }
+        
+        .btn-view {
+            background: #007acc;
+            color: white;
+        }
+        
+        .btn-view:hover {
+            background: #0056b3;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+        
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #dc3545;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .close {
+            cursor: pointer;
+            font-size: 24px;
+            color: #6c757d;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            resize: vertical;
+            height: 100px;
+        }
+        
+        @media (max-width: 768px) {
+            .ad-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .ad-actions {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>Advertisement Management</h1>
+            <p>Angelina411 Admin Dashboard</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalAds">-</div>
+                <div class="stat-label">Total Submissions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingAds">-</div>
+                <div class="stat-label">Pending Review</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeAds">-</div>
+                <div class="stat-label">Active Campaigns</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="approvedAds">-</div>
+                <div class="stat-label">Approved</div>
+            </div>
+        </div>
+
+        <!-- Pending Advertisements -->
+        <div class="pending-section">
+            <div class="section-header">
+                <h2>Pending Review</h2>
+            </div>
+            <div class="ad-list" id="pendingList">
+                <div class="loading">Loading pending advertisements...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal" id="reviewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Review Advertisement</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="reviewForm">
+                <input type="hidden" id="reviewRecordId">
+                <div class="form-group">
+                    <label for="adminNotes">Admin Notes (optional):</label>
+                    <textarea id="adminNotes" placeholder="Add any notes about your decision..."></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-reject" onclick="submitReview('reject')">
+                        Reject Advertisement
+                    </button>
+                    <button type="button" class="btn btn-approve" onclick="submitReview('approve')">
+                        Approve Advertisement
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Load dashboard data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStats();
+            loadPendingAds();
+        });
+
+        // Load advertisement statistics
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/advertisement-stats');
+                const stats = await response.json();
+                
+                if (stats.error) {
+                    console.error('Stats error:', stats.error);
+                    return;
+                }
+
+                document.getElementById('totalAds').textContent = stats.total || 0;
+                document.getElementById('pendingAds').textContent = stats.pending || 0;
+                document.getElementById('activeAds').textContent = stats.active || 0;
+                document.getElementById('approvedAds').textContent = stats.approved || 0;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Load pending advertisements
+        async function loadPendingAds() {
+            const listContainer = document.getElementById('pendingList');
+            
+            try {
+                const response = await fetch('/api/pending-advertisements');
+                const data = await response.json();
+                
+                if (data.error) {
+                    listContainer.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                    return;
+                }
+
+                const ads = data.advertisements;
+                
+                if (ads.length === 0) {
+                    listContainer.innerHTML = '<div class="empty">No pending advertisements to review.</div>';
+                    return;
+                }
+
+                listContainer.innerHTML = ads.map(ad => `
+                    <div class="ad-item">
+                        <div class="ad-header">
+                            <div class="ad-title">${ad.title}</div>
+                            <div class="ad-date">Submitted: ${new Date(ad.submissionDate).toLocaleDateString()}</div>
+                        </div>
+                        <div class="ad-content">
+                            <div class="ad-image">
+                                ${ad.imageUrl ? 
+                                    `<img src="${ad.imageUrl}" alt="Advertisement">` : 
+                                    '<div style="color: #6c757d; text-align: center;">No Image</div>'
+                                }
+                            </div>
+                            <div class="ad-details">
+                                <div class="ad-field">
+                                    <label>Advertiser:</label>
+                                    ${ad.advertiserName}
+                                </div>
+                                <div class="ad-field">
+                                    <label>Email:</label>
+                                    <a href="mailto:${ad.email}">${ad.email}</a>
+                                </div>
+                                <div class="ad-field">
+                                    <label>Campaign:</label>
+                                    ${new Date(ad.startDate).toLocaleDateString()} - ${new Date(ad.endDate).toLocaleDateString()}
+                                </div>
+                                <div class="ad-field">
+                                    <label>Target URL:</label>
+                                    <a href="${ad.targetUrl}" target="_blank">${ad.targetUrl}</a>
+                                </div>
+                                <div class="ad-field">
+                                    <label>Description:</label>
+                                    ${ad.description}
+                                </div>
+                                ${ad.dailyBudget ? `
+                                <div class="ad-field">
+                                    <label>Budget:</label>
+                                    $${ad.dailyBudget}/day
+                                </div>
+                                ` : ''}
+                                ${ad.notes ? `
+                                <div class="ad-field">
+                                    <label>Notes:</label>
+                                    ${ad.notes}
+                                </div>
+                                ` : ''}
+                            </div>
+                            <div class="ad-actions">
+                                <button class="btn btn-view" onclick="openReviewModal('${ad.id}', '${ad.advertiserName}')">
+                                    Review
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                listContainer.innerHTML = `<div class="error">Error loading advertisements: ${error.message}</div>`;
+            }
+        }
+
+        // Open review modal
+        function openReviewModal(recordId, advertiserName) {
+            document.getElementById('reviewRecordId').value = recordId;
+            document.getElementById('modalTitle').textContent = `Review: ${advertiserName}`;
+            document.getElementById('adminNotes').value = '';
+            document.getElementById('reviewModal').style.display = 'block';
+        }
+
+        // Close review modal
+        function closeModal() {
+            document.getElementById('reviewModal').style.display = 'none';
+        }
+
+        // Submit review decision
+        async function submitReview(action) {
+            const recordId = document.getElementById('reviewRecordId').value;
+            const notes = document.getElementById('adminNotes').value;
+
+            try {
+                const response = await fetch(`/api/review-advertisement/${recordId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: action,
+                        notes: notes
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(`Advertisement ${action}d successfully!`);
+                    closeModal();
+                    loadStats();
+                    loadPendingAds();
+                } else {
+                    alert(`Error: ${result.error}`);
+                }
+            } catch (error) {
+                alert(`Error submitting review: ${error.message}`);
+            }
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('reviewModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

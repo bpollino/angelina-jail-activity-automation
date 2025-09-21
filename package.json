@@ -1,0 +1,57 @@
+{
+  "name": "angelina-county-jail-activity-generator",
+  "version": "1.0.0",
+  "description": "Automated daily jail activity article generator for angelina411.com",
+  "main": "scripts/generate-article.js",
+  "scripts": {
+    "start": "node scripts/generate-article.js",
+    "dev": "node scripts/dev-server.js",
+    "test": "node scripts/test-generation.js",
+    "test:local": "node scripts/test-local.js",
+    "test:ad": "node scripts/test-with-ad.js",
+    "test:adaptive": "node scripts/test-adaptive-ratios.js",
+    "test:ad-system": "node scripts/test-ad-system.js",
+    "test:draft": "node scripts/test-lexical-draft.js",
+    "deploy": "node scripts/deploy-daily-post.js",
+    "generate": "node scripts/generate-article.js",
+    "generate:mock": "node scripts/generate-article.js --mock",
+    "serve": "node scripts/local-server.js",
+    "build": "echo 'Building for production...' && npm run test",
+    "lint": "echo 'Linting code...'",
+    "preview": "node scripts/preview-article.js"
+  },
+  "keywords": [
+    "jail",
+    "booking",
+    "news",
+    "automation",
+    "ghost",
+    "airtable",
+    "local-development"
+  ],
+  "author": "Angelina411 News Team",
+  "license": "MIT",
+  "dependencies": {
+    "@tryghost/admin-api": "^1.14.0",
+    "airtable": "^0.12.2",
+    "axios": "^1.12.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "form-data": "^4.0.4",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/angelina-county-jail-activity.git"
+  }
+}

@@ -1,0 +1,39 @@
+name: Daily Jail Activity Post
+
+on:
+  schedule:
+    # Run daily at 7:00 AM Central Time (12:00 PM UTC)
+    - cron: '0 12 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  create-jail-post:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Create jail activity post
+        env:
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+          AIRTABLE_BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
+          AIRTABLE_TABLE_NAME: ${{ secrets.AIRTABLE_TABLE_NAME }}
+          GHOST_ADMIN_API_KEY: ${{ secrets.GHOST_ADMIN_API_KEY }}
+          GHOST_API_URL: ${{ secrets.GHOST_API_URL }}
+          NODE_ENV: production
+        run: npm run deploy
+        
+      - name: Log completion
+        run: |
+          echo "✅ Daily jail activity post created successfully at $(date)"
+          echo "📅 Target date: $(date -d 'yesterday' '+%Y-%m-%d')"

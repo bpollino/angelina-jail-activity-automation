@@ -1,0 +1,49 @@
+# Daily Jail Activity Article Generator
+# Runs every day at 6 AM Central Time to generate and publish jail activity articles
+
+name: Generate Jail Activity Article
+
+on:
+  schedule:
+    # Runs at 6:00 AM Central Time (11:00 UTC during CST, 12:00 UTC during CDT)
+    - cron: '0 12 * * *'
+  
+  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Date for article (YYYY-MM-DD, defaults to yesterday)'
+        required: false
+        type: string
+
+jobs:
+  generate-article:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Generate and publish article
+      env:
+        AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+        AIRTABLE_BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
+        AIRTABLE_TABLE_NAME: ${{ secrets.AIRTABLE_TABLE_NAME }}
+        GHOST_ADMIN_API_KEY: ${{ secrets.GHOST_ADMIN_API_KEY }}
+        GHOST_SITE_URL: ${{ secrets.GHOST_SITE_URL }}
+        ARTICLE_DATE: ${{ inputs.date }}
+      run: node scripts/generate-article.js
+      
+    - name: Log completion
+      run: |
+        echo "Article generation completed at $(date)"
+        echo "Check angelina411.com for the published article"

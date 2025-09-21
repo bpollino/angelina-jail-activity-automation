@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advertise with Angelina411 - Submit Your Advertisement</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #007acc 0%, #0056b3 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .form-container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .required {
+            color: #dc3545;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #007acc;
+        }
+        
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-upload input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+        
+        .file-upload-btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #f8f9fa;
+            border: 2px dashed #007acc;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .file-upload-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .file-upload-btn.has-file {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .help-text {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        .image-preview {
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+        
+        .image-preview img {
+            max-width: 200px;
+            max-height: 200px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            object-fit: contain;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #007acc 0%, #0056b3 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            width: 100%;
+        }
+        
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .info-box {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .info-box h3 {
+            color: #0c5460;
+            margin-bottom: 10px;
+        }
+        
+        .info-box ul {
+            color: #0c5460;
+            margin-left: 20px;
+        }
+        
+        .pricing-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .pricing-info h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Advertise with Angelina411</h1>
+            <p>Reach thousands of local readers with our daily jail activity articles</p>
+        </div>
+
+        <div class="pricing-info">
+            <h3>💰 Affordable Local Advertising</h3>
+            <p>Starting at $25/day • High-visibility placement • Reaches thousands of daily readers</p>
+        </div>
+
+        <div class="info-box">
+            <h3>📝 Advertisement Requirements</h3>
+            <ul>
+                <li><strong>Image Format:</strong> Any ratio supported (square, portrait, landscape)</li>
+                <li><strong>File Types:</strong> JPG, PNG, or WebP</li>
+                <li><strong>File Size:</strong> Maximum 5MB</li>
+                <li><strong>Quality:</strong> High resolution recommended (minimum 300×300px)</li>
+                <li><strong>Content:</strong> Professional, family-friendly content only</li>
+            </ul>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <h3>✅ Advertisement Submitted Successfully!</h3>
+            <p>Thank you for your submission. We'll review your advertisement and contact you within 24 hours with approval status and next steps.</p>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            <h3>❌ Submission Error</h3>
+            <p id="errorText">There was a problem submitting your advertisement. Please try again.</p>
+        </div>
+
+        <div class="form-container">
+            <form id="advertisementForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="businessName">Business Name <span class="required">*</span></label>
+                    <input type="text" id="businessName" name="businessName" required>
+                    <div class="help-text">Your business or organization name</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="contactEmail">Email Address <span class="required">*</span></label>
+                    <input type="email" id="contactEmail" name="contactEmail" required>
+                    <div class="help-text">We'll contact you here about your advertisement</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="contactPhone">Phone Number</label>
+                    <input type="tel" id="contactPhone" name="contactPhone">
+                    <div class="help-text">Optional - for faster communication</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="businessWebsite">Business Website</label>
+                    <input type="url" id="businessWebsite" name="businessWebsite" placeholder="https://www.yourwebsite.com">
+                    <div class="help-text">Optional - your main business website</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="adImage">Advertisement Image <span class="required">*</span></label>
+                    <div class="file-upload">
+                        <input type="file" id="adImage" name="adImage" accept="image/*" required>
+                        <label for="adImage" class="file-upload-btn" id="fileUploadBtn">
+                            📎 Choose Image File
+                        </label>
+                    </div>
+                    <div class="help-text">Any ratio supported - square, portrait, or landscape images all work perfectly</div>
+                    <div class="image-preview" id="imagePreview">
+                        <img id="previewImg" alt="Advertisement Preview">
+                        <div>Preview: How your ad will appear (adaptive container)</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="targetUrl">Target URL <span class="required">*</span></label>
+                    <input type="url" id="targetUrl" name="targetUrl" required placeholder="https://www.yoursite.com/landing-page">
+                    <div class="help-text">Where users will go when they click your advertisement</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="adDescription">Advertisement Description <span class="required">*</span></label>
+                    <textarea id="adDescription" name="adDescription" required placeholder="Brief description of your business or offer..."></textarea>
+                    <div class="help-text">Brief description for accessibility and search engines</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="startDate">Campaign Start Date <span class="required">*</span></label>
+                    <input type="date" id="startDate" name="startDate" required>
+                    <div class="help-text">When you want your advertisement to begin running</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="endDate">Campaign End Date <span class="required">*</span></label>
+                    <input type="date" id="endDate" name="endDate" required>
+                    <div class="help-text">When you want your advertisement to stop running</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="dailyBudget">Preferred Daily Budget</label>
+                    <select id="dailyBudget" name="dailyBudget">
+                        <option value="">Select Budget Range</option>
+                        <option value="25-50">$25 - $50 per day</option>
+                        <option value="50-100">$50 - $100 per day</option>
+                        <option value="100-200">$100 - $200 per day</option>
+                        <option value="200+">$200+ per day</option>
+                        <option value="custom">Custom (we'll contact you)</option>
+                    </select>
+                    <div class="help-text">Help us understand your advertising budget preferences</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="additionalNotes">Additional Notes</label>
+                    <textarea id="additionalNotes" name="additionalNotes" placeholder="Any special requests or questions about your advertisement..."></textarea>
+                    <div class="help-text">Optional - any additional information or special requests</div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    Submit Advertisement for Review
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // File upload handling and preview
+        document.getElementById('adImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const uploadBtn = document.getElementById('fileUploadBtn');
+            const preview = document.getElementById('imagePreview');
+            const previewImg = document.getElementById('previewImg');
+
+            if (file) {
+                // Update button text
+                uploadBtn.textContent = `✅ ${file.name}`;
+                uploadBtn.classList.add('has-file');
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                uploadBtn.textContent = '📎 Choose Image File';
+                uploadBtn.classList.remove('has-file');
+                preview.style.display = 'none';
+            }
+        });
+
+        // Set minimum date to today
+        document.getElementById('startDate').min = new Date().toISOString().split('T')[0];
+        document.getElementById('endDate').min = new Date().toISOString().split('T')[0];
+
+        // Update end date minimum when start date changes
+        document.getElementById('startDate').addEventListener('change', function() {
+            document.getElementById('endDate').min = this.value;
+        });
+
+        // Form submission
+        document.getElementById('advertisementForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            // Hide messages
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+
+            try {
+                const formData = new FormData(this);
+                
+                const response = await fetch('/api/submit-advertisement', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Success
+                    successMsg.style.display = 'block';
+                    this.reset();
+                    document.getElementById('fileUploadBtn').textContent = '📎 Choose Image File';
+                    document.getElementById('fileUploadBtn').classList.remove('has-file');
+                    document.getElementById('imagePreview').style.display = 'none';
+                    
+                    // Scroll to success message
+                    successMsg.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    // Error
+                    errorText.textContent = result.error || 'There was a problem submitting your advertisement.';
+                    errorMsg.style.display = 'block';
+                    errorMsg.scrollIntoView({ behavior: 'smooth' });
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                errorText.textContent = 'Network error. Please check your connection and try again.';
+                errorMsg.style.display = 'block';
+                errorMsg.scrollIntoView({ behavior: 'smooth' });
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Advertisement for Review';
+            }
+        });
+    </script>
+</body>
+</html>

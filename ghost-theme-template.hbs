@@ -1,0 +1,72 @@
+{{!-- Ghost Theme Template for Jail Activity Posts --}}
+{{!-- This would go in your Ghost theme's post.hbs or a custom template --}}
+
+{{#post}}
+    {{#has tag="Jail"}}
+        {{!-- Enhanced meta tags for social sharing --}}
+        {{#contentFor "head"}}
+            <meta property="og:title" content="{{title}}">
+            <meta property="og:description" content="{{excerpt}}">
+            <meta property="og:type" content="article">
+            <meta property="og:url" content="{{url absolute="true"}}">
+            <meta name="twitter:card" content="summary_large_image">
+            <meta name="twitter:title" content="{{title}}">
+            <meta name="twitter:description" content="{{excerpt}}">
+            <meta name="twitter:url" content="{{url absolute="true"}}">
+            
+            {{!-- Jail activity specific meta tags --}}
+            <meta name="article:section" content="Community News">
+            <meta name="article:tag" content="Jail Activity">
+            <meta name="article:tag" content="Public Records">
+            <meta name="article:tag" content="Law Enforcement">
+        {{/contentFor}}
+        
+        <article class="jail-activity-article">
+            <header class="article-header">
+                <h1 class="post-title">{{title}}</h1>
+                <p class="attribution">Booking activity data, details and images provided by courtesy of the Angelina County Sheriff's Department.</p>
+                <div class="article-meta">
+                    <time class="post-date" datetime="{{date format="YYYY-MM-DD"}}">{{date format="MMM DD, YYYY"}}</time>
+                    <span class="read-time">—{{reading_time}}</span>
+                </div>
+            </header>
+
+            <section class="jail-activity-content">
+                <div class="disclaimer-container">
+                    <p class="disclaimer">All person(s) listed below are considered innocent until proven guilty in a court of law.</p>
+                </div>
+
+                {{!-- The main content would be generated HTML from your Airtable data --}}
+                <div class="post-content">
+                    {{{html}}}
+                </div>
+            </section>
+
+            <footer class="article-footer">
+                <div class="author-info">
+                    {{#primary_author}}
+                        <p>Published by <a href="{{url}}" class="author-link">{{name}}</a></p>
+                        {{#if bio}}<p class="author-description">{{bio}}</p>{{/if}}
+                    {{/primary_author}}
+                </div>
+                {{#if tags}}
+                    <div class="article-tags">
+                        {{#foreach tags}}
+                            <a href="{{url}}" class="tag">{{name}}</a>
+                        {{/foreach}}
+                    </div>
+                {{/if}}
+            </footer>
+        </article>
+    {{else}}
+        {{!-- Regular post template --}}
+        <article class="post">
+            <header>
+                <h1>{{title}}</h1>
+            </header>
+            <section>
+                {{content}}
+            </section>
+        </article>
+    {{/has}}
+{{/post}}
