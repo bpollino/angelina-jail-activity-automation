@@ -257,27 +257,27 @@ function generateLexicalContent(records, targetDate) {
         charges: offenses
       }));
       
-      // Social sharing buttons (simplified without complex JavaScript)
+      // Social sharing buttons that use current page URL
       const shareButtons = `<div class="share-buttons" style="display: flex; gap: 0.5rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ddd;">
-        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://angelina411.com')}" target="_blank" style="display: inline-flex; align-items: center; padding: 0.5rem; background-color: #f8f9fa; color: #666; text-decoration: none; border-radius: 4px; font-size: 0.9rem; border: 1px solid #ddd; transition: all 0.2s;">
+        <a href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank'); return false;" style="display: inline-flex; align-items: center; padding: 0.5rem; background-color: #f8f9fa; color: #666; text-decoration: none; border-radius: 4px; font-size: 0.9rem; border: 1px solid #ddd; transition: all 0.2s;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.25rem;">
             <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
           </svg>
           Share
         </a>
-        <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(`${fullName} arrested in Angelina County`)}&url=${encodeURIComponent('https://angelina411.com')}" target="_blank" style="display: inline-flex; align-items: center; padding: 0.5rem; background-color: #f8f9fa; color: #666; text-decoration: none; border-radius: 4px; font-size: 0.9rem; border: 1px solid #ddd; transition: all 0.2s;">
+        <a href="#" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('${fullName} arrested in Angelina County - ') + '&url=' + encodeURIComponent(window.location.href), '_blank'); return false;" style="display: inline-flex; align-items: center; padding: 0.5rem; background-color: #f8f9fa; color: #666; text-decoration: none; border-radius: 4px; font-size: 0.9rem; border: 1px solid #ddd; transition: all 0.2s;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.25rem;">
             <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
           </svg>
           Tweet
         </a>
-        <a href="mailto:?subject=${encodeURIComponent(`${fullName} - Angelina County Arrest`)}&body=${encodeURIComponent(`View arrest details: https://angelina411.com`)}" style="display: inline-flex; align-items: center; padding: 0.5rem; background-color: #f8f9fa; color: #666; text-decoration: none; border-radius: 4px; font-size: 0.9rem; border: 1px solid #ddd; transition: all 0.2s;">
+        <a href="#" onclick="window.location.href='mailto:?subject=' + encodeURIComponent('${fullName} - Angelina County Arrest') + '&body=' + encodeURIComponent('View arrest details: ' + window.location.href); return false;" style="display: inline-flex; align-items: center; padding: 0.5rem; background-color: #f8f9fa; color: #666; text-decoration: none; border-radius: 4px; font-size: 0.9rem; border: 1px solid #ddd; transition: all 0.2s;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.25rem;">
             <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
           </svg>
           Email
         </a>
-        <a href="#" onclick="navigator.clipboard.writeText('https://angelina411.com').then(() => alert('Link copied to clipboard!')); return false;" style="display: inline-flex; align-items: center; padding: 0.5rem; background-color: #f8f9fa; color: #666; text-decoration: none; border-radius: 4px; font-size: 0.9rem; border: 1px solid #ddd; transition: all 0.2s;">
+        <a href="#" onclick="navigator.clipboard.writeText(window.location.href).then(() => alert('Link copied to clipboard!')); return false;" style="display: inline-flex; align-items: center; padding: 0.5rem; background-color: #f8f9fa; color: #666; text-decoration: none; border-radius: 4px; font-size: 0.9rem; border: 1px solid #ddd; transition: all 0.2s;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.25rem;">
             <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
           </svg>
