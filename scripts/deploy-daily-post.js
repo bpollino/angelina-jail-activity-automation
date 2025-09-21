@@ -22,7 +22,7 @@ const config = {
   airtable: {
     apiKey: process.env.AIRTABLE_API_KEY,
     baseId: process.env.AIRTABLE_BASE_ID || 'appBn4Xs7GdnheynS',
-    tableName: process.env.AIRTABLE_TABLE_NAME || 'Angelina County Jail Activity'
+    tableId: process.env.AIRTABLE_TABLE_ID || 'tblq3cgwhhPPjffEi'
   },
   ghost: {
     adminApiKey: process.env.GHOST_ADMIN_API_KEY,
@@ -53,7 +53,7 @@ function initializeAPIs() {
     // Initialize Airtable
     Airtable.configure({ apiKey: config.airtable.apiKey });
     const base = Airtable.base(config.airtable.baseId);
-    const table = base(config.airtable.tableName);
+    const table = base(config.airtable.tableId);
     
     // Initialize Ghost JWT
     const [id, secret] = config.ghost.adminApiKey.split(':');
@@ -92,19 +92,42 @@ async function fetchBookingRecords(table, targetDate) {
     console.log('📊 Fetching booking data from Airtable...');
     
     const records = await table.select({
-      filterByFormula: `IS_SAME({Booking Date}, DATETIME_PARSE("${targetDate}", "YYYY-MM-DD"), "day")`,
       sort: [{ field: 'Booking Date', direction: 'desc' }]
     }).all();
+
+    // Filter records for target date
+    const filteredRecords = records.filter(record => {
+      const bookingDate = record.fields['Booking Date'];
+      if (!bookingDate) return false;
+      
+      // Convert booking date to YYYY-MM-DD format for comparison
+      let recordDate;
+      if (typeof bookingDate === 'string') {
+        const parsed = new Date(bookingDate);
+        recordDate = parsed.toISOString().split('T')[0];
+      } else {
+        recordDate = bookingDate.toISOString().split('T')[0];
+      }
+      
+      console.log(`🔍 Record: ${record.fields['Name']}, Booking Date: ${bookingDate}, Parsed: ${recordDate}`);
+      return recordDate === targetDate;
+    });
     
-    console.log(`📋 Found ${records.length} booking records for ${targetDate}`);
+    console.log(`📋 Found ${filteredRecords.length} booking records for ${targetDate}`);
     
-    if (records.length === 0) {
+    if (filteredRecords.length === 0) {
       console.log('ℹ️ No records found for target date. This may be normal for weekends or holidays.');
     }
     
-    return records;
+    return filteredRecords;
   } catch (error) {
     console.error('❌ Failed to fetch booking records:', error.message);
+    if (error.message.includes('not authorized')) {
+      console.error('🔑 Authorization Error: Check your Airtable Personal Access Token has proper scopes:');
+      console.error('   - data.records:read');
+      console.error('   - schema.bases:read');
+      console.error('   - Access to base: ' + config.airtable.baseId);
+    }
     throw error;
   }
 }
@@ -120,116 +143,133 @@ function generatePostTitle(targetDate) {
 
 // Generate Lexical content (using the same logic from test-lexical-draft.js)
 function generateLexicalContent(records, targetDate) {
-  // This would contain the same content generation logic from your test script
-  // For brevity, I'll include a simplified version here
-  
   const title = generatePostTitle(targetDate);
-  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const date = new Date(targetDate + 'T12:00:00Z');
-  const dayName = dayNames[date.getDay()];
   
-  let content = {
+  const children = [];
+  
+  // Add disclaimer as a callout card
+  children.push({
+    type: "callout",
+    version: 1,
+    calloutEmoji: "⚠️",
+    calloutText: "All person(s) listed below are considered innocent until proven guilty in a court of law. Information obtained from public records. <a href='https://www.angelina411.com/legal-disclaimer-daily-arrest-records/' target='_blank' style='color: #007bff; text-decoration: underline;'>Click here to see full disclaimer.</a>",
+    backgroundColor: "yellow"
+  });
+  
+  // Add attribution
+  children.push({
+    children: [
+      {
+        detail: 0,
+        format: 2, // italic
+        mode: "normal",
+        style: "",
+        text: "Booking activity data, details and images provided by courtesy of the Angelina County Sheriff's Department.",
+        type: "text",
+        version: 1
+      }
+    ],
+    direction: "ltr",
+    format: "center",
+    indent: 0,
+    type: "paragraph",
+    version: 1
+  });
+  
+  // Add spacer
+  children.push({
+    children: [],
+    direction: "ltr",
+    format: "",
+    indent: 0,
+    type: "paragraph",
+    version: 1
+  });
+  
+  if (records.length === 0) {
+    children.push({
+      children: [
+        {
+          detail: 0,
+          format: 1, // bold
+          mode: "normal",
+          style: "",
+          text: "No arrest records found for this date.",
+          type: "text",
+          version: 1
+        }
+      ],
+      direction: "ltr",
+      format: "center",
+      indent: 0,
+      type: "paragraph",
+      version: 1
+    });
+  } else {
+    // Add each record as an HTML card
+    records.forEach((record) => {
+      const fields = record.fields;
+      const fullName = fields['Name'] || 'Name not provided';
+      const bookingDate = fields['Booking Date'] || 'Not provided';
+      
+      // Handle mugshot
+      let mugshotHTML;
+      const mugshotUrl = fields['Mugshot URL'];
+      const isValidImageUrl = mugshotUrl && 
+        mugshotUrl.trim() !== '' && 
+        (mugshotUrl.startsWith('http://') || mugshotUrl.startsWith('https://')) &&
+        (mugshotUrl.includes('.jpg') || mugshotUrl.includes('.jpeg') || mugshotUrl.includes('.png') || mugshotUrl.includes('.gif'));
+        
+      if (isValidImageUrl) {
+        mugshotHTML = `<img src="${mugshotUrl}" alt="${fullName} mugshot" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 1px solid #ccc;">`;
+      } else {
+        mugshotHTML = `<div style="width: 100%; height: 100%; background-color: #f0f0f0; border: 2px dashed #ccc; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #888;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">📷</div><div style="font-size: 0.8rem;">Photo Not Available</div></div>`;
+      }
+
+      // Parse charges
+      const offenses = fields['Offenses'] || 'No charges listed';
+      const degrees = fields['Degrees'] || '';
+      
+      let chargesHTML;
+      if (offenses.includes(';') || offenses.includes(',')) {
+        const separator = offenses.includes(';') ? ';' : ',';
+        const chargeList = offenses.split(separator).map(charge => charge.trim());
+        
+        let degreeList = [];
+        if (degrees && degrees.trim() !== '') {
+          const degreeSeparator = degrees.includes(';') ? ';' : ',';
+          degreeList = degrees.split(degreeSeparator).map(degree => degree.trim());
+        }
+        
+        chargesHTML = `<div class="charges-section" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ddd;"><p style="margin: 0.5rem 0; font-weight: bold;">Charges:</p><ul style="margin: 0.5rem 0 0 1rem; padding: 0;">${chargeList.map((charge, index) => {
+          const degree = degreeList[index] || '';
+          return `<li style="margin: 0.25rem 0;">${charge}${degree ? ` (${degree})` : ''}</li>`;
+        }).join('')}</ul></div>`;
+      } else {
+        chargesHTML = `<div class="charges-section" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ddd;"><p style="margin: 0.5rem 0;"><strong>Charges:</strong> ${offenses}${degrees ? ` (${degrees})` : ''}</p></div>`;
+      }
+
+      // Create HTML card with mobile responsiveness
+      const arresteeHTML = `<style>@media (max-width: 768px) { .arrestee-container { flex-direction: column !important; align-items: center !important; } .arrestee-photo { order: 1 !important; width: 200px !important; margin: 0 auto 1rem auto !important; } .arrestee-info { order: 2 !important; text-align: left !important; width: 100% !important; } .arrestee-grid { grid-template-columns: 1fr 1fr !important; gap: 0.3rem !important; } .charges-section { text-align: left !important; font-size: 0.85rem !important; } }</style><div style="border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; margin: 2rem auto; background-color: #fafafa; max-width: 800px;"><div class="arrestee-container" style="display: flex; gap: 1.5rem; align-items: flex-start;"><div class="arrestee-photo" style="width: 150px; height: 200px; flex-shrink: 0;">${mugshotHTML}</div><div class="arrestee-info" style="flex: 1;"><h3 style="margin: 0 0 1rem 0; color: #2c3e50; font-size: 1.4rem;">${fullName}</h3><div class="arrestee-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;"><p style="margin: 0.25rem 0;"><strong>Age:</strong> ${fields['Age'] || 'Not provided'}</p><p style="margin: 0.25rem 0;"><strong>Sex:</strong> ${fields['Sex'] || 'Not provided'}</p><p style="margin: 0.25rem 0;"><strong>Race:</strong> ${fields['Race'] || 'Not provided'}</p><p style="margin: 0.25rem 0;"><strong>Height:</strong> ${fields['Height'] || 'Not provided'}</p><p style="margin: 0.25rem 0;"><strong>Weight:</strong> ${fields['Weight'] || 'Not provided'}</p><p style="margin: 0.25rem 0;"><strong>Booked:</strong> ${bookingDate}</p></div>${chargesHTML}</div></div></div>`;
+      
+      children.push({
+        type: "html",
+        version: 1,
+        html: arresteeHTML
+      });
+    });
+  }
+  
+  return {
     version: "0.15.0",
     root: {
       type: "root",
       format: "",
       indent: 0,
-      children: [
-        // Warning callout
-        {
-          type: "callout",
-          format: "",
-          indent: 0,
-          backgroundColor: "yellow",
-          icon: "⚠️",
-          children: [
-            {
-              type: "paragraph",
-              format: "",
-              indent: 0,
-              children: [
-                {
-                  type: "text",
-                  format: 0,
-                  style: "",
-                  text: "All person(s) listed below are considered innocent until proven guilty in a court of law.",
-                  detail: 0,
-                  mode: "normal"
-                }
-              ],
-              direction: "ltr"
-            }
-          ],
-          direction: "ltr"
-        },
-        // Introduction paragraph
-        {
-          type: "paragraph",
-          format: "",
-          indent: 0,
-          children: [
-            {
-              type: "text",
-              format: 0,
-              style: "",
-              text: `The following individuals were arrested and booked in Angelina County on ${dayName}, ${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}. This information is derived from public records provided by the Angelina County Sheriff's Department and reflects booking activity only.`,
-              detail: 0,
-              mode: "normal"
-            }
-          ],
-          direction: "ltr"
-        }
-      ]
+      children: children
     }
   };
-  
-  // Add record cards (simplified - you'd include the full HTML generation logic here)
-  if (records.length === 0) {
-    content.root.children.push({
-      type: "paragraph",
-      format: "",
-      indent: 0,
-      children: [
-        {
-          type: "text",
-          format: 1, // bold
-          style: "",
-          text: "No arrest records found for this date.",
-          detail: 0,
-          mode: "normal"
-        }
-      ],
-      direction: "ltr"
-    });
-  } else {
-    // Add each record as an HTML card (you'd include the full generation logic here)
-    records.forEach(record => {
-      // Include the full HTML card generation from your test script
-      // This is where you'd add the arrestee cards with photos, details, charges, etc.
-    });
-  }
-  
-  // Add closing information
-  content.root.children.push(
-    {
-      type: "paragraph",
-      format: "",
-      indent: 0,
-      children: [
-        {
-          type: "text",
-          format: 0,
-          style: "",
-          text: "This information is compiled from public records and is provided for informational purposes only. For questions about specific cases or to report corrections, please contact the Angelina County Sheriff's Department directly.",
-          detail: 0,
-          mode: "normal"
-        }
-      ],
-      direction: "ltr"
-    }
-  );
-  
-  return content;
 }
 
 // Create and publish Ghost post
