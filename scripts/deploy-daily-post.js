@@ -189,7 +189,7 @@ function generateLexicalContent(records, targetDate) {
 
   // Add simple Dropbox-hosted advertisement
   // Uses a fixed Dropbox shared folder URL - just upload/replace 'current-ad.jpg' in the folder
-  const adImageUrl = 'https://www.dropbox.com/scl/fi/0vpf5xq5d194tbx0kvoca/current-ad.jpg?rlkey=uunyix4qp4adsafxa0acybe0i&dl=1';
+  const adImageUrl = 'https://www.dropbox.com/scl/fi/0vpf5xq5d194tbx0kvoca/current-ad.jpg?rlkey=uunyix4qp4adsafxa0acybe0i&st=ajxpihav&dl=1';
   const adLinkUrl = process.env.AD_LINK_URL || 'https://angelina411.com';
   
   children.push({
@@ -364,7 +364,7 @@ async function createGhostPost(ghostToken, title, content, targetDate) {
       posts: [{
         title: title,
         status: 'published', // Publish automatically
-        authors: ['publius'],
+        authors: ['68c0ec9963bf040001528f6e'], // Publius ID
         tags: ['Angelina County', 'News', 'Jail', 'Data', 'Crime'],
         lexical: JSON.stringify(content),
         feature_image: 'https://www.dropbox.com/scl/fi/tq0u9p3i0bru7mluia90o/Angelina-Count-Arrest-Records.png?rlkey=6yo3oa5i1skxud4fi6x5prus5&st=kc8lqos2&dl=1',
