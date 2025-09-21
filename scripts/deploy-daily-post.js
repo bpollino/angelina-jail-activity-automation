@@ -294,7 +294,8 @@ async function createGhostPost(ghostToken, title, content, targetDate) {
       posts: [{
         title: title,
         status: 'published', // Publish automatically
-        tags: ['Jail', 'Booking', 'Community Activities', 'Local News'],
+        authors: ['Publius'],
+        tags: ['Angelina County', 'News', 'Jail', 'Data', 'Crime'],
         lexical: JSON.stringify(content),
         feature_image: 'https://www.dropbox.com/scl/fi/tq0u9p3i0bru7mluia90o/Angelina-Count-Arrest-Records.png?rlkey=6yo3oa5i1skxud4fi6x5prus5&st=kc8lqos2&dl=1',
         created_at: new Date().toISOString(),
